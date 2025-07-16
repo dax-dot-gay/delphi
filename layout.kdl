@@ -1,0 +1,10 @@
+layout {
+    pane split_direction="vertical" {
+        pane cwd="/workspaces/delphi/delphi_api" command="cargo" name="api" {
+            args "run"
+        }
+        pane cwd="/workspaces/delphi/delphi_client" command="pnpm" name="client" {
+            args "run" "dev"
+        }
+    }
+}

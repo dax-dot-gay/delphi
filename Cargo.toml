@@ -1,3 +1,6 @@
 [workspace]
 resolver = "3"
 members = ["delphi_api"]
+
+[patch.crates-io]
+deno_media_type = { git = 'https://github.com/denoland/deno_media_type', tag = "0.2.6" }

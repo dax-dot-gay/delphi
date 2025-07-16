@@ -1,0 +1,11 @@
+[default]
+address = "0.0.0.0"
+port = 8081
+cli_colors = true
+
+[debug.tls]
+key = "/workspaces/delphi/certs/api/key.pem"
+certs = "/workspaces/delphi/certs/api/cert.pem"
+
+[debug]
+secret_key = "7cI6ZCKIhThwGa/sjhWd+MBf42rnrpcvKcxq+Dhmi5U="
