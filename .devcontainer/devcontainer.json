@@ -33,7 +33,6 @@
 	},
 	"features": {
 		"ghcr.io/devcontainers/features/rust:1": {},
-		"ghcr.io/devcontainers-community/features/deno:1": {},
 		"ghcr.io/devcontainers-extra/features/pnpm:2": {},
 		"ghcr.io/devcontainers-extra/features/prettier:1": {},
 		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},

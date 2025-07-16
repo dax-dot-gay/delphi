@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "delphi_api_lib",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/status": {
+      "get": {
+        "tags": [
+          "Root"
+        ],
+        "operationId": "get_status",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiStatus": {
+        "type": "object",
+        "required": [
+          "session",
+          "time"
+        ],
+        "properties": {
+          "session": {
+            "$ref": "#/components/schemas/Session"
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Session": {
+        "type": "object",
+        "properties": {
+          "_docid": {
+            "default": "1796fadf-cb00-4938-9fb3-5d8d64ef35fe",
+            "type": "string"
+          },
+          "created": {
+            "default": "2025-07-16T21:09:40.010340676Z",
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_access": {
+            "default": "2025-07-16T21:09:40.010349176Z",
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

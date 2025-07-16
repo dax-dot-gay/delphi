@@ -1,23 +1,13 @@
 [package]
 name = "delphi_api"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 
 [dependencies]
 anyhow = "1.0.98"
-bson = { version = "2.15.0", features = ["chrono", "uuid-1"] }
-chrono = { version = "0.4.41", features = ["serde"] }
-mongodb = "3.2.4"
-okapi = { version = "0.7.0", features = ["impl_json_schema", "preserve_order"] }
-oximod = "0.1.11"
-parking_lot = { version = "0.12.4", features = ["serde", "arc_lock"] }
-rocket = { version = "0.5.1", features = ["secrets", "tls", "json", "uuid"] }
-rocket_okapi = { version = "0.9.0", features = ["preserve_order", "uuid", "secrets", "swagger", "rocket_ws"] }
-rocket_ws = "0.1.1"
-rustyscript = { version = "0.11.0", features = ["safe_extensions", "io_extensions", "network_extensions", "snapshot_builder"] }
-schemars = { version = "0.8", features = ["preserve_order", "raw_value", "chrono", "uuid1"] }
-serde = { version = "1.0.219", features = ["derive"] }
-serde_with = { version = "3.14.0", features = ["base64", "chrono", "json", "schemars_0_8"] }
-thiserror = "2.0.12"
-tokio = { version = "1.46.1", features = ["full"] }
-uuid = { version = "1.17.0", features = ["v4", "fast-rng", "serde"] }
+delphi_api_lib = {path = "../delphi_api_lib"}
+
+[build-dependencies]
+delphi_api_lib = {path = "../delphi_api_lib"}
+serde = "1.0.219"
+serde_json = "1.0.140"
