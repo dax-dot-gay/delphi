@@ -1,0 +1,38 @@
+.layout {
+    &.header {
+        background-color: var(--mantine-primary-color-light-hover);
+        border: none;
+        border-radius: var(--mantine-radius-xs);
+    }
+
+    &.nav {
+        height: calc(100vh - (48px + 3 * var(--mantine-spacing-xs)));
+        background-color: var(--mantine-primary-color-light-hover);
+        border: none;
+        border-radius: var(--mantine-radius-xs);
+        margin-top: calc(2 * var(--mantine-spacing-xs)) !important;
+
+        &.mobile {
+            max-width: calc(var(--app-shell-navbar-width) - 20px) !important;
+
+            &.collapsed {
+                transform: translateX(calc(var(--app-shell-navbar-width) * -1 - 20px));
+            }
+        }
+    }
+
+    &.content {
+        flex-direction: row;
+        display: flex;
+        padding-top: calc(48px + 2 * var(--mantine-spacing-xs));
+
+        #app-content {
+            flex-grow: 1;
+            position: relative;
+            display: inline-block;
+            height: calc(100vh - (48px + 2 * var(--mantine-spacing-xs)));
+            margin-right: var(--mantine-spacing-xs);
+            overflow: hidden;
+        }
+    }
+}

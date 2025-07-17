@@ -1,5 +1,14 @@
 {
-    "rust-analyzer.diagnostics.disabled": [
-        "macro-error"
-    ]
+    "rust-analyzer.diagnostics.disabled": ["macro-error"],
+    "cssVariables.lookupFiles": [
+        "**/*.css",
+        "**/*.scss",
+        "**/*.sass",
+        "**/*.less",
+        "delphi_client/node_modules/@mantine/core/styles.css"
+    ],
+    "i18n-ally.localesPaths": "delphi_client/src/lang",
+    "i18n-ally.enabledFrameworks": ["react-i18next"],
+    "i18n-ally.keystyle": "nested",
+    "typescript.preferences.includePackageJsonAutoImports": "on"
 }
