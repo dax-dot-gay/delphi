@@ -1,7 +1,7 @@
 [package]
 name = "delphi_api_lib"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 anyhow = "1.0.98"
@@ -25,3 +25,4 @@ delphi_macros = {path = "../delphi_macros"}
 bon = "3.6.4"
 oximod_core = "0.1.10"
 cookie = "0.18.1"
+scrypt = "0.11.0"

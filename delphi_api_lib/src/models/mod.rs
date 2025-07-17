@@ -1,2 +1,2 @@
 mod auth;
-pub use auth::Session;
+pub use auth::{Session, User, Password};

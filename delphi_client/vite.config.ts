@@ -9,7 +9,7 @@ export default defineConfig({
     {
       name: "OpenAPI Watcher",
       pattern: "openapi.json",
-      run: ["pnpm", "run", "openapi"]
+      run: ["bash", "../openapi.sh"]
     }
   ])],
   server: {

@@ -1,11 +1,46 @@
 use darling::{ast::NestedMeta, FromMeta};
-use proc_macro2::TokenStream;
+use proc_macro2::{TokenStream, TokenTree};
 use quote::quote;
-use syn::{Fields, ItemStruct};
+use syn::{parse::Parser, punctuated::Punctuated, token::Comma, Field, Fields, ItemStruct, Meta, MetaList};
 
 #[derive(FromMeta, Debug, Clone)]
 struct ModelArgs {
     pub collection: String,
+}
+
+#[derive(Clone, Debug)]
+enum FieldKind {
+    Start,
+    Field,
+    Finish,
+    Other
+}
+
+fn parse_attrs(field: Field) -> FieldKind {
+    for attr in field.attrs {
+        if attr.path().is_ident("builder") {
+            if let Meta::List(MetaList {tokens, ..}) = attr.meta {
+                for item in tokens {
+                    if let TokenTree::Ident(id) = item {
+                        match id.to_string().as_str() {
+                            "start_fn" => {
+                                return FieldKind::Start;
+                            },
+                            "field" => {
+                                return FieldKind::Field;
+                            },
+                            "finish_fn" => {
+                                return FieldKind::Finish;
+                            },
+                            _ => ()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    FieldKind::Other
 }
 
 pub fn impl_model(args: TokenStream, item: TokenStream) -> manyhow::Result {
@@ -18,6 +53,38 @@ pub fn impl_model(args: TokenStream, item: TokenStream) -> manyhow::Result {
         Fields::Named(f) => f,
         _ => panic!("Only named fields are supported!")
     }.named;
+    
+    let mut start_fields = Punctuated::<Field, Comma>::new();
+    let mut field_fields = Punctuated::<Field, Comma>::new();
+    let mut finish_fields = Punctuated::<Field, Comma>::new();
+    let mut other_fields = Punctuated::<Field, Comma>::new();
+    for field in fields.clone() {
+        match parse_attrs(field.clone()) {
+            FieldKind::Start => start_fields.push(field),
+            FieldKind::Field => field_fields.push(field),
+            FieldKind::Finish => finish_fields.push(field),
+            FieldKind::Other => other_fields.push(field),
+        }
+    }
+
+    let mut combined_fields = Punctuated::<Field, Comma>::new();
+    combined_fields.extend(start_fields);
+    combined_fields.push(Field::parse_named.parse2(quote! {
+        #[builder(field)]
+        #[serde(skip_serializing_if = "Option::is_none")]
+        #[schemars(skip)]
+        pub _id: Option<bson::oid::ObjectId>
+    })?);
+    combined_fields.extend(field_fields);
+    combined_fields.extend(finish_fields);
+    combined_fields.push(Field::parse_named.parse2(quote! {
+        #[builder(default = crate::util::default_uid(), name = id)]
+        #[serde(default = "crate::util::default_uid")]
+        #[default(crate::util::default_uid())]
+        #[index(unique)]
+        pub _docid: String
+    })?);
+    combined_fields.extend(other_fields);
 
 
     Ok(quote! {
@@ -27,18 +94,7 @@ pub fn impl_model(args: TokenStream, item: TokenStream) -> manyhow::Result {
         #[collection(#collection)]
         #[document_id_setter_ident("object_id")]
         #vis struct #ident #generics {
-            #[builder(field)]
-            #[serde(skip_serializing_if = "Option::is_none")]
-            #[schemars(skip)]
-            pub _id: Option<bson::oid::ObjectId>,
-
-            #[builder(default = crate::util::default_uid(), name = id)]
-            #[serde(default = "crate::util::default_uid")]
-            #[default(crate::util::default_uid())]
-            #[index(unique)]
-            pub _docid: String,
-
-            #fields
+            #combined_fields
         }
 
         impl #impl_generics #ident #type_generics #where_clause {
