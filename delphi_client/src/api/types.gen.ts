@@ -2,20 +2,46 @@
 
 export type ApiStatus = {
     session: Session;
+    user?: UserProfile | null;
     time: string;
 };
 
 export type Session = {
+    user_id?: string | null;
     _docid?: string;
     created?: string;
     last_access?: string;
+};
+
+export type UserProfile = {
+    username: string;
+    is_admin: boolean;
+};
+
+export type ApiError = {
+    kind: 'internal';
+    reason: string;
+} | {
+    kind: 'invalid_login';
+    user: string;
+} | {
+    kind: 'expects_authenticated';
+    path: string;
+} | {
+    kind: 'logged_in';
+    id: string;
+};
+
+export type LoginModel = {
+    username: string;
+    password: string;
 };
 
 export type GetStatusData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/status';
+    url: '/';
 };
 
 export type GetStatusResponses = {
@@ -23,6 +49,32 @@ export type GetStatusResponses = {
 };
 
 export type GetStatusResponse = GetStatusResponses[keyof GetStatusResponses];
+
+export type LogoutData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/login';
+};
+
+export type LogoutResponses = {
+    200: ApiError;
+};
+
+export type LogoutResponse = LogoutResponses[keyof LogoutResponses];
+
+export type LoginData = {
+    body: LoginModel;
+    path?: never;
+    query?: never;
+    url: '/login';
+};
+
+export type LoginResponses = {
+    200: ApiError | UserProfile;
+};
+
+export type LoginResponse = LoginResponses[keyof LoginResponses];
 
 export type ClientOptions = {
     baseURL: `${string}://${string}` | (string & {});

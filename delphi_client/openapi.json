@@ -5,7 +5,7 @@
     "version": "0.1.0"
   },
   "paths": {
-    "/status": {
+    "/": {
       "get": {
         "tags": [
           "Root"
@@ -18,6 +18,61 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "Root"
+        ],
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiError"
+                    },
+                    {
+                      "$ref": "#/components/schemas/UserProfile"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Root"
+        ],
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
                 }
               }
             }
@@ -38,6 +93,14 @@
           "session": {
             "$ref": "#/components/schemas/Session"
           },
+          "user": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserProfile"
+              }
+            ],
+            "nullable": true
+          },
           "time": {
             "type": "string",
             "format": "date-time"
@@ -47,19 +110,130 @@
       "Session": {
         "type": "object",
         "properties": {
+          "user_id": {
+            "default": null,
+            "type": "string",
+            "nullable": true
+          },
           "_docid": {
-            "default": "9bd8d9f1-2f45-45f3-b916-349be7bbcd88",
+            "default": "359c21ba-8cbf-49cd-a69a-531739457339",
             "type": "string"
           },
           "created": {
-            "default": "2025-07-17T14:53:25.409167455Z",
+            "default": "2025-07-17T17:29:12.582687010Z",
             "type": "string",
             "format": "date-time"
           },
           "last_access": {
-            "default": "2025-07-17T14:53:25.409178824Z",
+            "default": "2025-07-17T17:29:12.582695380Z",
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "UserProfile": {
+        "type": "object",
+        "required": [
+          "is_admin",
+          "username"
+        ],
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "is_admin": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ApiError": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "reason"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "internal"
+                ]
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "user"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "invalid_login"
+                ]
+              },
+              "user": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "path"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "expects_authenticated"
+                ]
+              },
+              "path": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "logged_in"
+                ]
+              },
+              "id": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "LoginModel": {
+        "type": "object",
+        "required": [
+          "password",
+          "username"
+        ],
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
           }
         }
       }

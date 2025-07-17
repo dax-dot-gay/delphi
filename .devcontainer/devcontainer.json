@@ -36,7 +36,8 @@
 		"ghcr.io/devcontainers-extra/features/pnpm:2": {},
 		"ghcr.io/devcontainers-extra/features/prettier:1": {},
 		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
-		"ghcr.io/devcontainer-community/devcontainer-features/zellij.dev:1": {}
+		"ghcr.io/devcontainer-community/devcontainer-features/zellij.dev:1": {},
+		"ghcr.io/devcontainer-community/devcontainer-features/btop:1": {}
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

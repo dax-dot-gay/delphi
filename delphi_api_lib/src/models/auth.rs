@@ -1,3 +1,4 @@
+use bson::doc;
 use chrono::{ DateTime, Utc };
 use delphi_macros::model;
 use oximod::ModelTrait;
@@ -22,6 +23,10 @@ pub struct Session {
     #[serde(default = "chrono::Utc::now")]
     #[builder(default = chrono::Utc::now())]
     pub last_access: DateTime<Utc>,
+
+    #[serde(default)]
+    #[builder(field)]
+    pub user_id: Option<String>,
 }
 
 #[rocket::async_trait]
@@ -59,6 +64,18 @@ impl<'r> FromRequest<'r> for Session {
     }
 }
 
+impl Session {
+    pub async fn user(&self) -> Option<User> {
+        if let Some(user_id) = self.user_id.clone() {
+            if let Ok(Some(user)) = User::get(user_id).await {
+                return Some(user);
+            }
+        }
+
+        None
+    }
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct Password(String);
 
@@ -89,6 +106,7 @@ impl Default for Password {
     }
 }
 
+#[derive(OpenApiFromRequest)]
 #[model(collection = "auth.users")]
 pub struct User {
     #[builder(start_fn, into)]
@@ -98,6 +116,12 @@ pub struct User {
     pub password: Password,
 
     #[builder(default)]
+    pub is_admin: bool,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
+pub struct UserProfile {
+    pub username: String,
     pub is_admin: bool,
 }
 
@@ -112,5 +136,43 @@ impl User {
 
     pub fn verify(&self, password: impl AsRef<str>) -> bool {
         self.password.verify(password)
+    }
+
+    pub fn profile(&self) -> UserProfile {
+        UserProfile { username: self.username.clone(), is_admin: self.is_admin }
+    }
+
+    pub async fn get_username(username: impl Into<String>) -> crate::Result<Option<Self>> {
+        Ok(Self::find_one(doc! {"username": username.into()}).await?)
+    }
+}
+
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for User {
+    type Error = ApiError;
+    async fn from_request(req: &'r Request<'_>) -> Outcome<Self, Self::Error> {
+        match Session::from_request(&req).await {
+            rocket::outcome::Outcome::Success(session) => {
+                if let Some(user_id) = session.user_id.clone() {
+                    if let Ok(Some(user)) = User::get(user_id).await {
+                        Outcome::Success(user)
+                    } else {
+                        let mut updated_session = session.clone();
+                        updated_session.user_id = None;
+                        if let Err(e) = updated_session.save().await {
+                            return Outcome::Error((Status::InternalServerError, e.into()));
+                        }
+
+                        (ApiError::ExpectsAuthenticated {
+                            path: req.uri().path().to_string(),
+                        }).into()
+                    }
+                } else {
+                    (ApiError::ExpectsAuthenticated { path: req.uri().path().to_string() }).into()
+                }
+            }
+            rocket::outcome::Outcome::Forward(status) => Outcome::Forward(status),
+            rocket::outcome::Outcome::Error((status, err)) => Outcome::Error((status, err)),
+        }
     }
 }

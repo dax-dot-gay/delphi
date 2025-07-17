@@ -9,3 +9,6 @@ certs = "/workspaces/delphi/certs/api/cert.pem"
 
 [debug]
 secret_key = "7cI6ZCKIhThwGa/sjhWd+MBf42rnrpcvKcxq+Dhmi5U="
+
+[debug.delphi]
+auth.admin_user = ["admin", "admin"]
