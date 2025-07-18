@@ -52,6 +52,16 @@
               }
             }
           },
+          "405": {
+            "description": "# 405 Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MethodNotAllowed"
+                }
+              }
+            }
+          },
           "500": {
             "description": "# 500 Internal Server Error",
             "content": {
@@ -68,16 +78,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NotFound"
-                }
-              }
-            }
-          },
-          "405": {
-            "description": "# 405 Method Not Allowed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MethodNotAllowed"
                 }
               }
             }
@@ -103,6 +103,16 @@
           "200": {
             "description": ""
           },
+          "405": {
+            "description": "# 405 Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MethodNotAllowed"
+                }
+              }
+            }
+          },
           "500": {
             "description": "# 500 Internal Server Error",
             "content": {
@@ -119,16 +129,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NotFound"
-                }
-              }
-            }
-          },
-          "405": {
-            "description": "# 405 Method Not Allowed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MethodNotAllowed"
                 }
               }
             }
@@ -182,16 +182,16 @@
             "nullable": true
           },
           "_docid": {
-            "default": "cb0df96a-92f4-41ff-868a-f5452cd5240f",
+            "default": "c9b208c7-446c-4d42-bfc2-e5e002f0668b",
             "type": "string"
           },
           "created": {
-            "default": "2025-07-18T02:21:40.229638698Z",
+            "default": "2025-07-18T14:23:42.261839572Z",
             "type": "string",
             "format": "date-time"
           },
           "last_access": {
-            "default": "2025-07-18T02:21:40.229647948Z",
+            "default": "2025-07-18T14:23:42.261850672Z",
             "type": "string",
             "format": "date-time"
           }
@@ -211,6 +211,28 @@
             "type": "boolean"
           }
         }
+      },
+      "MethodNotAllowed": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "code",
+              "id"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "logged_in"
+                ]
+              },
+              "id": {
+                "type": "string"
+              }
+            }
+          }
+        ]
       },
       "InternalServerError": {
         "oneOf": [
@@ -250,28 +272,6 @@
                 ]
               },
               "user": {
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
-      "MethodNotAllowed": {
-        "oneOf": [
-          {
-            "type": "object",
-            "required": [
-              "code",
-              "id"
-            ],
-            "properties": {
-              "code": {
-                "type": "string",
-                "enum": [
-                  "logged_in"
-                ]
-              },
-              "id": {
                 "type": "string"
               }
             }

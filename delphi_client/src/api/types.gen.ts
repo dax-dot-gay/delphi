@@ -18,6 +18,11 @@ export type UserProfile = {
     is_admin: boolean;
 };
 
+export type MethodNotAllowed = {
+    code: 'logged_in';
+    id: string;
+};
+
 export type InternalServerError = {
     code: 'internal';
     reason: string;
@@ -26,11 +31,6 @@ export type InternalServerError = {
 export type NotFound = {
     code: 'invalid_login';
     user: string;
-};
-
-export type MethodNotAllowed = {
-    code: 'logged_in';
-    id: string;
 };
 
 export type Unauthorized = {

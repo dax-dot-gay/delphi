@@ -5,7 +5,10 @@ export default defineConfig({
     output: "src/api",
     plugins: [
         ...defaultPlugins,
-        "@hey-api/client-axios",
+        {
+            name: "@hey-api/client-axios",
+            runtimeConfigPath: "./src/hey-api.ts",
+        },
         {
             asClass: true,
             name: "@hey-api/sdk",
