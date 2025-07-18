@@ -18,18 +18,24 @@ export type UserProfile = {
     is_admin: boolean;
 };
 
-export type ApiError = {
-    kind: 'internal';
+export type InternalServerError = {
+    code: 'internal';
     reason: string;
-} | {
-    kind: 'invalid_login';
-    user: string;
-} | {
-    kind: 'expects_authenticated';
-    path: string;
-} | {
-    kind: 'logged_in';
+};
+
+export type MethodNotAllowed = {
+    code: 'logged_in';
     id: string;
+};
+
+export type NotFound = {
+    code: 'invalid_login';
+    user: string;
+};
+
+export type Unauthorized = {
+    code: 'expects_authenticated';
+    path: string;
 };
 
 export type LoginModel = {
@@ -57,11 +63,30 @@ export type LogoutData = {
     url: '/login';
 };
 
-export type LogoutResponses = {
-    200: ApiError;
+export type LogoutErrors = {
+    /**
+     * # 401 Unauthorized
+     */
+    401: Unauthorized;
+    /**
+     * # 404 Not Found
+     */
+    404: NotFound;
+    /**
+     * # 405 Method Not Allowed
+     */
+    405: MethodNotAllowed;
+    /**
+     * # 500 Internal Server Error
+     */
+    500: InternalServerError;
 };
 
-export type LogoutResponse = LogoutResponses[keyof LogoutResponses];
+export type LogoutError = LogoutErrors[keyof LogoutErrors];
+
+export type LogoutResponses = {
+    200: unknown;
+};
 
 export type LoginData = {
     body: LoginModel;
@@ -70,8 +95,29 @@ export type LoginData = {
     url: '/login';
 };
 
+export type LoginErrors = {
+    /**
+     * # 401 Unauthorized
+     */
+    401: Unauthorized;
+    /**
+     * # 404 Not Found
+     */
+    404: NotFound;
+    /**
+     * # 405 Method Not Allowed
+     */
+    405: MethodNotAllowed;
+    /**
+     * # 500 Internal Server Error
+     */
+    500: InternalServerError;
+};
+
+export type LoginError = LoginErrors[keyof LoginErrors];
+
 export type LoginResponses = {
-    200: ApiError | UserProfile;
+    200: UserProfile;
 };
 
 export type LoginResponse = LoginResponses[keyof LoginResponses];

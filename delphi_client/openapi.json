@@ -47,14 +47,47 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "anyOf": [
-                    {
-                      "$ref": "#/components/schemas/ApiError"
-                    },
-                    {
-                      "$ref": "#/components/schemas/UserProfile"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/UserProfile"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "# 500 Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "# 405 Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MethodNotAllowed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "# 404 Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "# 401 Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
                 }
               }
             }
@@ -68,11 +101,44 @@
         "operationId": "logout",
         "responses": {
           "200": {
-            "description": "",
+            "description": ""
+          },
+          "500": {
+            "description": "# 500 Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "# 405 Method Not Allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MethodNotAllowed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "# 404 Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "# 401 Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
                 }
               }
             }
@@ -116,16 +182,16 @@
             "nullable": true
           },
           "_docid": {
-            "default": "359c21ba-8cbf-49cd-a69a-531739457339",
+            "default": "fdf4fd83-efa9-46dc-89b7-4313c4035468",
             "type": "string"
           },
           "created": {
-            "default": "2025-07-17T17:29:12.582687010Z",
+            "default": "2025-07-18T02:08:56.265885351Z",
             "type": "string",
             "format": "date-time"
           },
           "last_access": {
-            "default": "2025-07-17T17:29:12.582695380Z",
+            "default": "2025-07-18T02:08:56.265894961Z",
             "type": "string",
             "format": "date-time"
           }
@@ -146,16 +212,16 @@
           }
         }
       },
-      "ApiError": {
+      "InternalServerError": {
         "oneOf": [
           {
             "type": "object",
             "required": [
-              "kind",
+              "code",
               "reason"
             ],
             "properties": {
-              "kind": {
+              "code": {
                 "type": "string",
                 "enum": [
                   "internal"
@@ -165,15 +231,41 @@
                 "type": "string"
               }
             }
-          },
+          }
+        ]
+      },
+      "MethodNotAllowed": {
+        "oneOf": [
           {
             "type": "object",
             "required": [
-              "kind",
+              "code",
+              "id"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "logged_in"
+                ]
+              },
+              "id": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "NotFound": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "code",
               "user"
             ],
             "properties": {
-              "kind": {
+              "code": {
                 "type": "string",
                 "enum": [
                   "invalid_login"
@@ -183,39 +275,25 @@
                 "type": "string"
               }
             }
-          },
+          }
+        ]
+      },
+      "Unauthorized": {
+        "oneOf": [
           {
             "type": "object",
             "required": [
-              "kind",
+              "code",
               "path"
             ],
             "properties": {
-              "kind": {
+              "code": {
                 "type": "string",
                 "enum": [
                   "expects_authenticated"
                 ]
               },
               "path": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "type": "object",
-            "required": [
-              "id",
-              "kind"
-            ],
-            "properties": {
-              "kind": {
-                "type": "string",
-                "enum": [
-                  "logged_in"
-                ]
-              },
-              "id": {
                 "type": "string"
               }
             }

@@ -27,3 +27,4 @@ oximod_core = "0.1.10"
 cookie = "0.18.1"
 scrypt = "0.11.0"
 strum = { version = "0.27.1", features = ["derive", "strum_macros", "phf"] }
+httpstatus = "0.1.2"

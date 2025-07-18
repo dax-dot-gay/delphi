@@ -1,34 +1,24 @@
-use rocket::{ http::Status, serde::json::Json, Responder };
-use rocket_okapi::response::OpenApiResponderInner;
-use schemars::JsonSchema;
-use serde::{ Deserialize, Serialize };
-use strum::EnumProperty;
+use delphi_macros::http_error;
 
-#[derive(Serialize, Deserialize, thiserror::Error, Clone, Debug, Responder, EnumProperty, JsonSchema)]
-#[response(content_type = "json")]
-#[serde(tag = "kind", rename_all = "snake_case")]
+#[http_error]
 pub enum ApiError {
-    #[strum(props(code = 500))] #[response(status = 500)] #[error(
-        "Internal error: {reason}"
-    )] Internal {
+    #[err(code = 500, message = "Internal error: {reason}")] 
+    Internal {
         reason: String,
     },
 
-    #[strum(props(code = 404))] #[response(status = 404)] #[error(
-        "Unknown username/password: {user}:***"
-    )] InvalidLogin {
+    #[err(code = 404, message = "Unknown username/password: {user}:***")] 
+    InvalidLogin {
         user: String,
     },
 
-    #[strum(props(code = 401))] #[response(status = 401)] #[error(
-        "Endpoint expects an authenticated user: {path}"
-    )] ExpectsAuthenticated {
+    #[err(code = 401, message = "Endpoint expects an authenticated user: {path}")] 
+    ExpectsAuthenticated {
         path: String,
     },
 
-    #[strum(props(code = 405))] #[response(status = 405)] #[error(
-        "Already logged in!"
-    )] LoggedIn {
+    #[err(code = 405, message = "Already logged in!")]
+    LoggedIn {
         id: String
     }
 }
@@ -36,20 +26,14 @@ pub enum ApiError {
 impl<T: Into<Error>> From<T> for ApiError {
     fn from(value: T) -> Self {
         let intermediate: Error = value.into();
-        Self::Internal { reason: format!("{intermediate:?}") }
+        Self::internal_server_error_internal(intermediate.to_string())
     }
 }
 
 impl<S> Into<rocket::request::Outcome<S, ApiError>> for ApiError {
     fn into(self) -> rocket::request::Outcome<S, ApiError> {
-        let status = Status::new(u16::try_from(self.get_int("code").unwrap_or(500)).unwrap_or(500));
+        let status = self.code();
         rocket::request::Outcome::Error((status, self))
-    }
-}
-
-impl OpenApiResponderInner for ApiError {
-    fn responses(generator: &mut rocket_okapi::r#gen::OpenApiGenerator) -> rocket_okapi::Result<okapi::openapi3::Responses> {
-        <Json<ApiError> as OpenApiResponderInner>::responses(generator)
     }
 }
 

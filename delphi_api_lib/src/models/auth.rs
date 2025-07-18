@@ -163,12 +163,10 @@ impl<'r> FromRequest<'r> for User {
                             return Outcome::Error((Status::InternalServerError, e.into()));
                         }
 
-                        (ApiError::ExpectsAuthenticated {
-                            path: req.uri().path().to_string(),
-                        }).into()
+                        (ApiError::unauthorized_expects_authenticated(req.uri().path().to_string())).into()
                     }
                 } else {
-                    (ApiError::ExpectsAuthenticated { path: req.uri().path().to_string() }).into()
+                    (ApiError::unauthorized_expects_authenticated(req.uri().path().to_string())).into()
                 }
             }
             rocket::outcome::Outcome::Forward(status) => Outcome::Forward(status),

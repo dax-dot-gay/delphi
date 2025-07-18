@@ -34,7 +34,7 @@ pub struct LoginModel {
 #[post("/login", data = "<login>")]
 async fn login(session: Session, login: Json<LoginModel>) -> ApiResult<Json<UserProfile>> {
     if let Some(user_id) = session.user_id.clone() {
-        return Err(crate::ApiError::LoggedIn { id: user_id });
+        return Err(crate::ApiError::method_not_allowed_logged_in(user_id));
     }
 
     let login = login.into_inner();
@@ -44,10 +44,10 @@ async fn login(session: Session, login: Json<LoginModel>) -> ApiResult<Json<User
             session.user_id(user.id()).save().await?;
             Ok(Json(user.profile()))
         } else {
-            Err(crate::ApiError::InvalidLogin { user: login.username })
+            Err(crate::ApiError::not_found_invalid_login(login.username))
         }
     } else {
-        Err(crate::ApiError::InvalidLogin { user: login.username })
+        Err(crate::ApiError::not_found_invalid_login(login.username))
     }
 }
 
