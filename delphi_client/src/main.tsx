@@ -10,12 +10,6 @@ import "mantine-contextmenu/styles.layer.css";
 
 import "./style.scss";
 import "./theme/style.css";
-
-import { Localization } from "./lang/provider";
 import { Suspender } from "./Suspender";
 
-createRoot(document.getElementById("root")!).render(
-    <Localization>
-        <Suspender />
-    </Localization>
-);
+createRoot(document.getElementById("root")!).render(<Suspender />);

@@ -1,5 +1,34 @@
 {
   "app": {
     "name": "Delphi"
+  },
+  "views": {
+    "auth": {
+      "login": "Log In",
+      "username": {
+        "label": "Username"
+      },
+      "password": {
+        "label": "Password"
+      },
+      "feedback": {
+        "success": "Successfully logged in!",
+        "unknown": "Unknown username/password!"
+      }
+    }
+  },
+  "common": {
+    "notif": {
+      "success": "Success!",
+      "error": "Error:"
+    },
+    "errors": {
+      "api": {
+        "unhandled": "Unhandled API error! Details printed to console."
+      }
+    }
+  },
+  "layout": {
+    "logout": "Logout"
   }
 }

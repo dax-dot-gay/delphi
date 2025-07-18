@@ -102,7 +102,7 @@ fn codegen_status(
     status_variants.push(
         quote! {
         #[error(transparent)]
-        #[response(status = #code, content_type = "json")]
+        #[response(status = #code, content_type = "application/json")]
         #status_name {
             error: #status_name
         }
@@ -168,11 +168,16 @@ fn codegen_status(
 
     status_enums.push(
         quote! {
-        #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema, Responder, thiserror::Error)]
-        #[response(status = #code, content_type = "json")]
+        #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema, thiserror::Error)]
         #[serde(tag = "code", rename_all = "snake_case")]
         enum #status_name {
             #internal_variants
+        }
+
+        impl<'r> rocket::response::Responder<'r, 'static> for #status_name {
+            fn respond_to(self, r: &'r rocket::Request<'_>) -> rocket::response::Result<'static> {
+                Json(self).respond_to(r)
+            }
         }
     }
     );
@@ -242,7 +247,7 @@ pub fn impl_http_error(_: TokenStream, item: TokenStream) -> manyhow::Result {
         mod #mod_id {
             use serde::{Serialize, Deserialize};
             use schemars::JsonSchema;
-            use rocket::Responder;
+            use rocket::{Responder, serde::json::Json};
             use okapi::openapi3::{MediaType, Responses};
             use rocket_okapi::response::OpenApiResponderInner;
 

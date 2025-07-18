@@ -16,7 +16,9 @@
             max-width: calc(var(--app-shell-navbar-width) - 20px) !important;
 
             &.collapsed {
-                transform: translateX(calc(var(--app-shell-navbar-width) * -1 - 20px));
+                transform: translateX(
+                    calc(var(--app-shell-navbar-width) * -1 - 20px)
+                );
             }
         }
     }
@@ -35,4 +37,30 @@
             overflow: hidden;
         }
     }
+    &.root.disabled {
+        overflow: hidden;
+
+        .content {
+            position: relative;
+            display: inline-block;
+            width: 100vw;
+            height: 100vh;
+            padding-top: 0px;
+            overflow: hidden;
+
+            #app-content {
+                position: relative;
+                display: inline-block;
+                width: 100vw;
+                height: 100vh;
+                overflow: hidden;
+            }
+        }
+    }
+}
+
+body {
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
 }

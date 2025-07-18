@@ -14,13 +14,9 @@ export type Session = {
 };
 
 export type UserProfile = {
+    id: string;
     username: string;
     is_admin: boolean;
-};
-
-export type MethodNotAllowed = {
-    code: 'logged_in';
-    id: string;
 };
 
 export type InternalServerError = {
@@ -28,14 +24,19 @@ export type InternalServerError = {
     reason: string;
 };
 
-export type NotFound = {
-    code: 'invalid_login';
-    user: string;
-};
-
 export type Unauthorized = {
     code: 'expects_authenticated';
     path: string;
+};
+
+export type MethodNotAllowed = {
+    code: 'logged_in';
+    id: string;
+};
+
+export type NotFound = {
+    code: 'invalid_login';
+    user: string;
 };
 
 export type LoginModel = {

@@ -40,13 +40,14 @@ async fn login(session: Session, login: Json<LoginModel>) -> ApiResult<Json<User
     let login = login.into_inner();
 
     if let Some(user) = User::get_username(login.username.clone()).await? {
-        if user.verify(login.password) {
+        if user.verify(login.password).await {
             session.user_id(user.id()).save().await?;
             Ok(Json(user.profile()))
         } else {
             Err(crate::ApiError::not_found_invalid_login(login.username))
         }
     } else {
+        User::create("noop", "noop").verify(login.password).await;
         Err(crate::ApiError::not_found_invalid_login(login.username))
     }
 }

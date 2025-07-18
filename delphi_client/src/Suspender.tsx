@@ -5,10 +5,10 @@ import { shadcnCssVariableResolver } from "./theme/cssVariableResolver";
 import { shadcnTheme } from "./theme/theme";
 import { Suspense } from "react";
 import { AuthProvider, getStatus } from "./context/auth";
-import { useTranslation } from "react-i18next";
+import { Localization } from "./lang/provider";
+import { Notifications } from "@mantine/notifications";
 
 export function Suspender() {
-    const { t } = useTranslation();
     const statusPromise = getStatus();
     return (
         <MantineProvider
@@ -22,14 +22,17 @@ export function Suspender() {
                         <Group gap="md">
                             <Loader type="dots" color="primary" size="lg" />
                             <Title order={2} ff="monospace">
-                                {t("app.name")}
+                                Delphi
                             </Title>
                         </Group>
                     </Center>
                 }
             >
                 <AuthProvider promise={statusPromise}>
-                    <RouterProvider router={router} />
+                    <Localization>
+                        <Notifications />
+                        <RouterProvider router={router} />
+                    </Localization>
                 </AuthProvider>
             </Suspense>
         </MantineProvider>

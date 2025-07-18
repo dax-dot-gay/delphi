@@ -1,4 +1,10 @@
-import { TbCrystalBall } from "react-icons/tb";
+import {
+    TbCrystalBall,
+    TbLogout,
+    TbLogout2,
+    TbUser,
+    TbUserShield,
+} from "react-icons/tb";
 import { useDisclosure } from "@mantine/hooks";
 import "./layout.scss";
 import {
@@ -8,12 +14,21 @@ import {
     AppShellNavbar,
     Box,
     Burger,
+    Button,
+    Divider,
     Group,
+    ScrollArea,
+    Skeleton,
+    Stack,
     Text,
+    ThemeIcon,
     useMatches,
 } from "@mantine/core";
-import { Outlet } from "react-router";
+import { Outlet, useLocation, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
+import { useAuthRefresh, useAuthUser } from "../../context/auth";
+import { useEffect } from "react";
+import { Root } from "../../api";
 
 export function Layout() {
     const isMobile = useMatches({
@@ -24,6 +39,17 @@ export function Layout() {
     const [collapsed, { toggle: toggleCollapsed }] = useDisclosure(true);
     const { t } = useTranslation();
 
+    const nav = useNavigate();
+    const location = useLocation();
+    const authUser = useAuthUser();
+    const refresh = useAuthRefresh();
+
+    useEffect(() => {
+        if (location.pathname !== "/auth" && !authUser) {
+            nav("/auth");
+        }
+    }, [nav, location.pathname, authUser?.id]);
+
     return (
         <AppShell
             header={{ height: 48 }}
@@ -32,7 +58,10 @@ export function Layout() {
                 breakpoint: "md",
                 collapsed: { desktop: false, mobile: collapsed },
             }}
-            className="layout root"
+            className={`layout root ${
+                location.pathname === "/auth" ? "disabled" : ""
+            }`}
+            disabled={location.pathname === "/auth"}
         >
             <AppShellHeader p={0} m="xs" mb={0} className="layout header">
                 <Group
@@ -71,13 +100,52 @@ export function Layout() {
                 </Group>
             </AppShellHeader>
             <AppShellNavbar
-                p="xs"
                 m="xs"
                 mr={0}
                 className={`layout nav ${
                     collapsed && isMobile ? "collapsed" : ""
                 } ${isMobile ? "mobile" : ""}`}
-            ></AppShellNavbar>
+            >
+                {authUser && (
+                    <>
+                        <AppShell.Section
+                            grow
+                            my="md"
+                            component={ScrollArea}
+                            p="xs"
+                        >
+                            <Stack gap="sm"></Stack>
+                        </AppShell.Section>
+                        <AppShell.Section>
+                            <Stack gap={0} mt="sm">
+                                <Divider />
+                                <Group gap="sm" justify="space-between" p="xs">
+                                    <ThemeIcon
+                                        color="primary"
+                                        variant="light"
+                                        size="lg"
+                                    >
+                                        {authUser.is_admin ? (
+                                            <TbUserShield size={20} />
+                                        ) : (
+                                            <TbUser size={20} />
+                                        )}
+                                    </ThemeIcon>
+                                    <Button
+                                        leftSection={<TbLogout size={20} />}
+                                        variant="subtle"
+                                        onClick={() => {
+                                            Root.logout().then(refresh);
+                                        }}
+                                    >
+                                        {t("layout.logout")}
+                                    </Button>
+                                </Group>
+                            </Stack>
+                        </AppShell.Section>
+                    </>
+                )}
+            </AppShellNavbar>
             <AppShellMain className="layout content">
                 <Box id="app-content">
                     <Outlet />

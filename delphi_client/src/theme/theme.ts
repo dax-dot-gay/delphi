@@ -380,7 +380,7 @@ export const shadcnTheme: MantineThemeOverride = createTheme({
         lg: rem("16px"),
         xl: rem("24px"),
     },
-    defaultRadius: "sm",
+    defaultRadius: "xs",
     spacing: {
         "4xs": rem("2px"),
         "3xs": rem("4px"),

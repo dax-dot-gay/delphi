@@ -121,6 +121,7 @@ pub struct User {
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct UserProfile {
+    pub id: String,
     pub username: String,
     pub is_admin: bool,
 }
@@ -134,12 +135,14 @@ impl User {
         Self::builder(username, password).is_admin(true).build()
     }
 
-    pub fn verify(&self, password: impl AsRef<str>) -> bool {
-        self.password.verify(password)
+    pub async fn verify(&self, password: impl AsRef<str>) -> bool {
+        let this = self.clone();
+        let password = password.as_ref().to_string();
+        tokio::task::spawn_blocking(move || this.password.verify(password)).await.unwrap_or(false)
     }
 
     pub fn profile(&self) -> UserProfile {
-        UserProfile { username: self.username.clone(), is_admin: self.is_admin }
+        UserProfile { id: self.id(), username: self.username.clone(), is_admin: self.is_admin }
     }
 
     pub async fn get_username(username: impl Into<String>) -> crate::Result<Option<Self>> {
