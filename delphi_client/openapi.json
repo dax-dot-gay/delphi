@@ -52,6 +52,16 @@
               }
             }
           },
+          "404": {
+            "description": "# 404 Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          },
           "500": {
             "description": "# 500 Internal Server Error",
             "content": {
@@ -78,16 +88,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MethodNotAllowed"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "# 404 Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFound"
                 }
               }
             }
@@ -103,6 +103,16 @@
           "200": {
             "description": ""
           },
+          "404": {
+            "description": "# 404 Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          },
           "500": {
             "description": "# 500 Internal Server Error",
             "content": {
@@ -129,16 +139,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MethodNotAllowed"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "# 404 Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFound"
                 }
               }
             }
@@ -182,16 +182,16 @@
             "nullable": true
           },
           "_docid": {
-            "default": "4dd55985-45bf-491b-8dc6-c6c4ed7beb35",
+            "default": "d41a810c-9a8e-443b-b92e-c5674d2d401a",
             "type": "string"
           },
           "created": {
-            "default": "2025-07-18T15:48:23.492916622Z",
+            "default": "2025-07-18T17:52:34.246957902Z",
             "type": "string",
             "format": "date-time"
           },
           "last_access": {
-            "default": "2025-07-18T15:48:23.492926802Z",
+            "default": "2025-07-18T17:52:34.246974682Z",
             "type": "string",
             "format": "date-time"
           }
@@ -215,6 +215,28 @@
             "type": "boolean"
           }
         }
+      },
+      "NotFound": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "code",
+              "user"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "invalid_login"
+                ]
+              },
+              "user": {
+                "type": "string"
+              }
+            }
+          }
+        ]
       },
       "InternalServerError": {
         "oneOf": [
@@ -276,28 +298,6 @@
                 ]
               },
               "id": {
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
-      "NotFound": {
-        "oneOf": [
-          {
-            "type": "object",
-            "required": [
-              "code",
-              "user"
-            ],
-            "properties": {
-              "code": {
-                "type": "string",
-                "enum": [
-                  "invalid_login"
-                ]
-              },
-              "user": {
                 "type": "string"
               }
             }

@@ -6,6 +6,7 @@ pub mod models;
 pub mod util;
 pub mod routes;
 pub mod config;
+pub mod plugins;
 mod error;
 
 pub use error::{ Error, ApiError, Result, ApiResult };

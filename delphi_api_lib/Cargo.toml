@@ -28,3 +28,4 @@ cookie = "0.18.1"
 scrypt = "0.11.0"
 strum = { version = "0.27.1", features = ["derive", "strum_macros", "phf"] }
 httpstatus = "0.1.2"
+specta = { version = "1.0.5", features = ["serde", "typescript", "uuid", "chrono", "tokio", "url"] }

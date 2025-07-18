@@ -1,10 +1,4 @@
-import {
-    TbCrystalBall,
-    TbLogout,
-    TbLogout2,
-    TbUser,
-    TbUserShield,
-} from "react-icons/tb";
+import { TbCrystalBall, TbLogout, TbUser, TbUserShield } from "react-icons/tb";
 import { useDisclosure } from "@mantine/hooks";
 import "./layout.scss";
 import {
@@ -18,7 +12,6 @@ import {
     Divider,
     Group,
     ScrollArea,
-    Skeleton,
     Stack,
     Text,
     ThemeIcon,
