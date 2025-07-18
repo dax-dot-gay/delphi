@@ -23,14 +23,14 @@ export type InternalServerError = {
     reason: string;
 };
 
-export type MethodNotAllowed = {
-    code: 'logged_in';
-    id: string;
-};
-
 export type NotFound = {
     code: 'invalid_login';
     user: string;
+};
+
+export type MethodNotAllowed = {
+    code: 'logged_in';
+    id: string;
 };
 
 export type Unauthorized = {
